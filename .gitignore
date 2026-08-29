@@ -14,7 +14,6 @@ backend/.env.*
 
 # Docker / OS
 .env
-.env.*
 docker-compose.override.yml
 *.log
 npm-debug.log*
