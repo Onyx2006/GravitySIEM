@@ -10,11 +10,9 @@ backend/.venv/
 backend/__pycache__/
 backend/**/*.pyc
 backend/.env
-backend/.env.*
 
 # Docker / OS
 .env
-.env.*
 docker-compose.override.yml
 *.log
 npm-debug.log*
