@@ -1,0 +1,171 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  @apply bg-void text-ink font-mono antialiased;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(0, 255, 65, 0.06), transparent),
+    radial-gradient(ellipse 60% 40% at 100% 100%, rgba(0, 240, 255, 0.04), transparent),
+    #02040A;
+  background-attachment: fixed;
+}
+
+/* scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #132030;
+  border-radius: 0;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #00521F;
+}
+
+/* selection */
+::selection {
+  background: rgba(0, 255, 65, 0.3);
+  color: #D6FFE8;
+}
+
+.leaflet-container {
+  background: #02040A !important;
+  filter: saturate(1.3) hue-rotate(70deg) brightness(0.9);
+}
+
+/* CRT / scanline overlay */
+.crt-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 60;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 255, 65, 0.035) 0px,
+    rgba(0, 255, 65, 0.035) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  mix-blend-mode: overlay;
+}
+
+.crt-vignette {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 59;
+  box-shadow: inset 0 0 200px rgba(0, 0, 0, 0.75);
+}
+
+.crt-sweep {
+  position: fixed;
+  left: 0;
+  right: 0;
+  height: 140px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(0, 255, 65, 0.05) 40%,
+    rgba(0, 255, 65, 0.09) 50%,
+    rgba(0, 255, 65, 0.05) 60%,
+    transparent
+  );
+  pointer-events: none;
+  z-index: 58;
+  animation: scanline 7s linear infinite;
+}
+
+/* noise texture */
+.noise-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 57;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+
+/* terminal window chrome */
+.term-dots span {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  margin-right: 6px;
+}
+
+/* glitch text */
+.glitch {
+  position: relative;
+  display: inline-block;
+}
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  overflow: hidden;
+  opacity: 0.8;
+}
+.glitch::before {
+  color: #00F0FF;
+  clip-path: inset(0 0 55% 0);
+  animation: glitch 3.5s infinite steps(2);
+  animation-delay: 0.1s;
+}
+.glitch::after {
+  color: #FF2ED1;
+  clip-path: inset(55% 0 0 0);
+  animation: glitch 4.2s infinite steps(2) reverse;
+}
+
+/* blinking cursor */
+.cursor-blink::after {
+  content: "\2588";
+  display: inline-block;
+  margin-left: 3px;
+  color: #00FF41;
+  animation: blink 1s step-end infinite;
+}
+
+/* scanning border */
+.scan-border {
+  position: relative;
+  background: linear-gradient(90deg, #001A0D, #00FF41, #001A0D) ;
+  background-size: 200% 100%;
+}
+
+/* terminal grid backdrop */
+.grid-backdrop {
+  background-image:
+    linear-gradient(rgba(0, 255, 65, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 65, 0.05) 1px, transparent 1px);
+  background-size: 34px 34px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .crt-sweep,
+  .glitch::before,
+  .glitch::after,
+  .cursor-blink::after {
+    animation: none !important;
+  }
+}
+
+*:focus-visible {
+  outline: 1px solid #00FF41;
+  outline-offset: 2px;
+}
