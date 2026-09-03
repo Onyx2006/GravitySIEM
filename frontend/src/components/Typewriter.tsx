@@ -17,26 +17,38 @@ export default function Typewriter({
 
   useEffect(() => {
     let cancelled = false;
-    async function run() {
-      for (const line of lines) {
-        if (cancelled) return;
-        let current = "";
-        for (const char of line) {
-          if (cancelled) return;
-          current += char;
-          setOutput((prev) => [...prev.slice(0, -1), current]);
-          await new Promise((r) => setTimeout(r, speed));
-        }
-        setOutput((prev) => [...prev, ""]);
-        await new Promise((r) => setTimeout(r, lineDelay));
+    let lineIndex = 0;
+    let charIndex = 0;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+
+    function run() {
+      if (cancelled) return;
+      const line = lines[lineIndex];
+
+      if (line === undefined) {
+        setOutput((prev) => prev.slice(0, -1));
+        onDone?.();
+        return;
       }
-      setOutput((prev) => prev.slice(0, -1));
-      onDone?.();
+
+      if (charIndex < line.length) {
+        charIndex += 1;
+        setOutput((prev) => [...prev.slice(0, -1), line.slice(0, charIndex)]);
+        timer = setTimeout(run, speed);
+        return;
+      }
+
+      lineIndex += 1;
+      charIndex = 0;
+      setOutput((prev) => [...prev, ""]);
+      timer = setTimeout(run, lineDelay);
     }
+
     setOutput([""]);
     run();
     return () => {
       cancelled = true;
+      if (timer) clearTimeout(timer);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
