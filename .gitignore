@@ -4,6 +4,7 @@ frontend/dist/
 frontend/.vite/
 frontend/.env
 frontend/.env.*
+*.tsbuildinfo
 
 # Python / backend
 backend/.venv/
